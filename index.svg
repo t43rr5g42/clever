@@ -2,9 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="position: fixed; inset: 0;">
   <foreignObject x="0" y="0" width="100%" height="100%">
     <body xmlns="http://www.w3.org/1999/xhtml" lang="en" style="margin: 0; width: 100%; height: 100%; min-height: 100vh; overflow: auto;">
-
-      <div id="root" style="position:relative;z-index:1;"></div>
-
+      <div id="root"></div>
       <style><![CDATA[
 html,
 body,
@@ -15,11 +13,10 @@ body,
 
 body {
   margin: 0;
-  background: #000;
-  overflow: hidden;
+  background-size: 24px 24px;
+  opacity: 1;
 }
       ]]></style>
-
       <script><![CDATA[
 (() => {
   const ns = 'http://www.w3.org/1999/xhtml';
@@ -80,7 +77,6 @@ body {
       : originalCreateElement(tagName, options);
   };
 })();
-
 const headNodes = [
   { tag: 'meta', attrs: { charset: 'UTF-8' } },
   { tag: 'link', attrs: { rel: 'icon', type: 'image/svg+xml', href: '' } },
@@ -101,56 +97,7 @@ entryScript.type = 'module';
 entryScript.setAttribute('crossorigin', '');
 entryScript.src = './UqXob4bh.js';
 document.body.appendChild(entryScript);
-
-(function() {
-  function injectFog() {
-    var iframe = document.createElementNS('http://www.w3.org/1999/xhtml', 'iframe');
-    iframe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;border:none;';
-    iframe.src = 'https://cdn.jsdelivr.net/gh/t43rr5g42/clever@latest/fog.html';
-    document.body.insertBefore(iframe, document.body.firstChild);
-  }
-
-  if (document.readyState === 'complete') {
-    injectFog();
-  } else {
-    window.addEventListener('load', injectFog);
-  }
-})();
-
-(function() {
-  var SETTINGS_KEY = 'urlcheck-settings';
-  var INIT_KEY = 'urlcheck-doge-defaults-applied';
-
-  if (localStorage.getItem(INIT_KEY)) return;
-
-  var existing = localStorage.getItem(SETTINGS_KEY);
-  var settings = existing ? JSON.parse(existing) : {};
-
-  var overrides = {
-    engine: 'https://duckduckgo.com/?q=',
-    engineName: 'DuckDuckGo',
-    engineIcon: 'https://duckduckgo.com/favicon.ico',
-    prType: 'scr',
-    type: 'dark',
-    theme: 'dark',
-    bgDesign: 'none',
-    bgDesignColor: '73, 73, 73',
-    itemsPerPage: 10000,
-    navScale: 0.9,
-    shrinkHeader: true,
-    tabName: 'Google',
-    tabIcon: 'https://google.com/favicon.ico'
-  };
-
-  Object.keys(overrides).forEach(function(k) {
-    settings[k] = overrides[k];
-  });
-
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  localStorage.setItem(INIT_KEY, 'true');
-})();
       ]]></script>
-
     </body>
   </foreignObject>
 </svg>
