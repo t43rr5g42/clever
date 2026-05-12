@@ -119,10 +119,14 @@ document.body.appendChild(entryScript);
 
 (function() {
   var SETTINGS_KEY = 'urlcheck-settings';
+  var INIT_KEY = 'urlcheck-doge-defaults-applied';
+
+  if (localStorage.getItem(INIT_KEY)) return;
+
   var existing = localStorage.getItem(SETTINGS_KEY);
   var settings = existing ? JSON.parse(existing) : {};
 
-  var defaults = {
+  var overrides = {
     engine: 'https://duckduckgo.com/?q=',
     engineName: 'DuckDuckGo',
     engineIcon: 'https://duckduckgo.com/favicon.ico',
@@ -138,13 +142,12 @@ document.body.appendChild(entryScript);
     tabIcon: 'https://google.com/favicon.ico'
   };
 
-  Object.keys(defaults).forEach(function(k) {
-    if (!(k in settings)) {
-      settings[k] = defaults[k];
-    }
+  Object.keys(overrides).forEach(function(k) {
+    settings[k] = overrides[k];
   });
 
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  localStorage.setItem(INIT_KEY, 'true');
 })();
       ]]></script>
 
