@@ -116,6 +116,37 @@ document.body.appendChild(entryScript);
     window.addEventListener('load', injectFog);
   }
 })();
+
+(function() {
+  var defaults = {
+    engine: 'https://duckduckgo.com/?q=',
+    engineName: 'DuckDuckGo',
+    engineIcon: 'https://duckduckgo.com/favicon.ico',
+    prType: 'sj',
+    backend: 'scramjet',
+    theme: 'dark',
+    bgDesign: 'none',
+    bgDesignColor: '#0d1117',
+    appsPerPage: 'all',
+    navScale: 90,
+    compactHeader: true,
+    aboutBlankAutoOpen: true,
+    panicKey: '`'
+  };
+
+  Object.keys(defaults).forEach(function(k) {
+    if (!localStorage.getItem(k)) {
+      localStorage.setItem(k, JSON.stringify(defaults[k]));
+    }
+  });
+
+  if (defaults.aboutBlankAutoOpen && window === window.top) {
+    var stored = localStorage.getItem('aboutBlankAutoOpen');
+    if (!stored || stored === 'true') {
+      window.__scramjetAutoBlank = true;
+    }
+  }
+})();
       ]]></script>
 
     </body>
