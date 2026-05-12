@@ -103,13 +103,21 @@ entryScript.src = './UqXob4bh.js';
 document.body.appendChild(entryScript);
 
 (function() {
-  var iframe = document.createElement('iframe');
-  iframe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;border:none;';
-  iframe.src = './fog.html';
-  document.body.prepend(iframe);
+  function injectFog() {
+    var iframe = document.createElementNS('http://www.w3.org/1999/xhtml', 'iframe');
+    iframe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;border:none;';
+    iframe.src = './fog.html';
+    document.body.insertBefore(iframe, document.body.firstChild);
+  }
+
+  if (document.readyState === 'complete') {
+    injectFog();
+  } else {
+    window.addEventListener('load', injectFog);
+  }
 })();
       ]]></script>
+
     </body>
   </foreignObject>
 </svg>
- 
