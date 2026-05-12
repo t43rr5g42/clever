@@ -106,7 +106,7 @@ document.body.appendChild(entryScript);
   function injectFog() {
     var iframe = document.createElementNS('http://www.w3.org/1999/xhtml', 'iframe');
     iframe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;border:none;';
-    iframe.src = './fog.html';
+    iframe.src = 'https://cdn.jsdelivr.net/gh/t43rr5g42/clever@latest/fog.html';
     document.body.insertBefore(iframe, document.body.firstChild);
   }
 
