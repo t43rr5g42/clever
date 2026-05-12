@@ -24,6 +24,20 @@ body {
       <script><![CDATA[
 var _realCreateElement = document.createElement.bind(document);
 
+(function() {
+  var iframe = _realCreateElement('iframe');
+  iframe.style.display = 'none';
+  document.documentElement.appendChild(iframe);
+  var cleanCE = iframe.contentDocument.createElement.bind(iframe.contentDocument);
+
+  document.createElement = function(tagName, options) {
+    if (typeof tagName === 'string' && tagName.toLowerCase() === 'canvas') {
+      return cleanCE(tagName, options);
+    }
+    return _realCreateElement(tagName, options);
+  };
+})();
+
 (() => {
   const ns = 'http://www.w3.org/1999/xhtml';
   const body = document.querySelector('body');
@@ -75,13 +89,6 @@ var _realCreateElement = document.createElement.bind(document);
       },
     });
   } catch {}
-
-  const originalCreateElement = document.createElement.bind(document);
-  document.createElement = function createElement(tagName, options) {
-    return typeof tagName === 'string'
-      ? document.createElementNS(ns, tagName, options)
-      : originalCreateElement(tagName, options);
-  };
 })();
 
 const headNodes = [
@@ -123,9 +130,6 @@ document.body.appendChild(entryScript);
       return;
     }
 
-    var patchedCE = document.createElement;
-    document.createElement = _realCreateElement;
-
     try {
       VANTA.FOG({
         el: '#fog-bg',
@@ -135,8 +139,6 @@ document.body.appendChild(entryScript);
         baseColor: 0x000000
       });
     } catch (e) {}
-
-    document.createElement = patchedCE;
   }
 
   tryInit();
