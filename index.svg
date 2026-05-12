@@ -24,6 +24,10 @@ body {
       ]]></style>
 
       <script><![CDATA[
+// Save original createElement before the namespace patch hijacks it.
+// This is needed later for THREE.js to create a real HTML canvas.
+var _origCreateElement = document.createElement.bind(document);
+
 (() => {
   const ns = 'http://www.w3.org/1999/xhtml';
   const body = document.querySelector('body');
@@ -83,6 +87,7 @@ body {
       : originalCreateElement(tagName, options);
   };
 })();
+
 const headNodes = [
   { tag: 'meta', attrs: { charset: 'UTF-8' } },
   { tag: 'link', attrs: { rel: 'icon', type: 'image/svg+xml', href: '' } },
@@ -116,36 +121,24 @@ entryScript.src = './UqXob4bh.js';
 document.body.appendChild(entryScript);
       ]]></script>
 
-      <!-- Fog init — runs after Vanta loads, uses raw createElement for canvas -->
+      <!-- Fog init script -->
       <script><![CDATA[
 (function() {
   var STORAGE_KEY = 'doge_fog_enabled';
   var fogOn = localStorage.getItem(STORAGE_KEY) !== 'false';
   var vantaEffect = null;
   var bg = document.getElementById('fog-bg');
-  var rawCE = null;
-
-  // Grab the raw createElement before the namespace patch overrides it.
-  // If the patch already ran, we need a workaround.
-  function getRawCE() {
-    if (rawCE) return rawCE;
-    // Try to get it from an unpatched iframe or from the prototype
-    var iframe = document.createElementNS('http://www.w3.org/1999/xhtml', 'iframe');
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-    rawCE = iframe.contentDocument.createElement.bind(iframe.contentDocument);
-    document.body.removeChild(iframe);
-    return rawCE;
-  }
 
   function initFog() {
-    if (typeof VANTA === 'undefined') {
+    if (typeof VANTA === 'undefined' || typeof _origCreateElement === 'undefined') {
       setTimeout(initFog, 200);
       return;
     }
 
-    var origCE = document.createElement;
-    document.createElement = getRawCE();
+    // Temporarily swap createElement back to the original (HTML namespace)
+    // so THREE.js can create a real canvas for WebGL.
+    var patchedCE = document.createElement;
+    document.createElement = _origCreateElement;
 
     try {
       vantaEffect = VANTA.FOG({
@@ -159,17 +152,14 @@ document.body.appendChild(entryScript);
       console.warn('Vanta fog init failed:', e);
     }
 
-    document.createElement = origCE;
+    // Restore the namespace-patched createElement for the proxy
+    document.createElement = patchedCE;
     applyState();
   }
 
   function applyState() {
     if (!bg) return;
-    if (fogOn) {
-      bg.style.opacity = '1';
-    } else {
-      bg.style.opacity = '0';
-    }
+    bg.style.opacity = fogOn ? '1' : '0';
   }
 
   // Keyboard shortcut: Ctrl+Alt+F toggles fog
