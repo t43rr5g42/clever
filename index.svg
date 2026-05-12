@@ -118,34 +118,33 @@ document.body.appendChild(entryScript);
 })();
 
 (function() {
+  var SETTINGS_KEY = 'urlcheck-settings';
+  var existing = localStorage.getItem(SETTINGS_KEY);
+  var settings = existing ? JSON.parse(existing) : {};
+
   var defaults = {
     engine: 'https://duckduckgo.com/?q=',
     engineName: 'DuckDuckGo',
     engineIcon: 'https://duckduckgo.com/favicon.ico',
-    prType: 'sj',
-    backend: 'scramjet',
+    prType: 'scr',
+    type: 'dark',
     theme: 'dark',
     bgDesign: 'none',
-    bgDesignColor: '#0d1117',
-    appsPerPage: 'all',
-    navScale: 90,
-    compactHeader: true,
-    aboutBlankAutoOpen: true,
-    panicKey: '`'
+    bgDesignColor: '73, 73, 73',
+    itemsPerPage: 10000,
+    navScale: 0.9,
+    shrinkHeader: true,
+    tabName: 'Google',
+    tabIcon: 'https://google.com/favicon.ico'
   };
 
   Object.keys(defaults).forEach(function(k) {
-    if (!localStorage.getItem(k)) {
-      localStorage.setItem(k, JSON.stringify(defaults[k]));
+    if (!(k in settings)) {
+      settings[k] = defaults[k];
     }
   });
 
-  if (defaults.aboutBlankAutoOpen && window === window.top) {
-    var stored = localStorage.getItem('aboutBlankAutoOpen');
-    if (!stored || stored === 'true') {
-      window.__scramjetAutoBlank = true;
-    }
-  }
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 })();
       ]]></script>
 
